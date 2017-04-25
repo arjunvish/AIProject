@@ -1,4 +1,5 @@
 To-Do:
+- Pick a coordinator, recorder, and a checker. I propose to be the recorder (Arjun).
 - Read the 3 papers and figure out 2 heuristics for the 8-puzzle problem.
 - Implement Manhattan distance heuristics, and 2 heuristics from the literature.
 - Create test cases.
