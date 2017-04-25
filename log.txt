@@ -1,0 +1,13 @@
+To-Do:
+- Read the 3 papers and figure out 2 heuristics for the 8-puzzle problem.
+- Implement Manhattan distance heuristics, and 2 heuristics from the literature.
+- Create test cases.
+- Run A* search on test cases.
+- Fix goal configuration.
+- Fix time limit for test cases.
+- Find average value for each solution depth.
+- Read about IDA* and SMA*.
+- Choose a heuristic for 15-puzzle problem.
+
+Log:
+4/25 - 11:30 AM - Arjun - Github project created. Files added.
