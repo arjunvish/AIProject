@@ -1,34 +1,40 @@
 import scala.collection.mutable.PriorityQueue
+import scala.collection.mutable.Set
 
-def Astar (startState: State, goal: State, Operators: List[Operator], h: (State, State)=> Double): List[State] = {
-  val frontier = PriorityQueue.empty[(Double, Int, State)](
-    Ordering.by((_: (Double, Int, State))._1).reverse
+def Astar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: (P, P)=> Double): List[P] = {
+  val frontier = PriorityQueue.empty[(Double, Int, P)](
+    Ordering.by((_: (Double, Int, P))._1).reverse
   )
+  val explored = Set[P]()
+  explored += startState
   frontier += ((h(startState, goal), 0, startState))
   while (!frontier.isEmpty) {
     val stateTuple = frontier.dequeue()
     val g = stateTuple._2
     var state = stateTuple._3
     if (state == goal) {
-      var path = List[State]()
+      var path = List[P]()
+      path = goal :: path
+      println("hi")
       while (state != startState) {
-        val prevState = state.getPredecessor()
+        val prevState: P = state.getPredecessor().asInstanceOf[P]
         path = state :: path
         state = prevState
       }  
       return path
     }
-    state.setExplored()
     for (op <- Operators) {
         val output = op(state)
-        println(output)
-        if (output != None && !output.get.isExplored()){
-          output.get.setPredecessor(state)
-          frontier += ((g+1+h(output.get, goal), g+1, output.get))
+        //println(output)
+        if (output != None && !explored.contains(output.get.asInstanceOf[P])){
+          val o: P = output.get.asInstanceOf[P]
+          o.setPredecessor(state)
+          frontier += ((g+1+h(o, goal), g+1, o))
+          explored += o
         } 
       }
   }
-  return List[State]()
+  return List[P]()
 }
 
 def manhattan(a: BoardState, b: BoardState): Double = {
@@ -56,4 +62,4 @@ def misplaced(a: BoardState, b: BoardState): Double = {
   h
 }
 
-Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
+println(Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double))
