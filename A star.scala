@@ -31,7 +31,7 @@ def Astar (startState: State, goal: State, Operators: List[Operator], h: (State,
   return List[State]()
 }
 
-def misplaced(a: BoardState, b: BoardState): Double = {
+def manhattan(a: BoardState, b: BoardState): Double = {
   val amap = a.board.tiles.map(_.swap)
   val bmap = b.board.tiles.map(_.swap)
   var h = 0
@@ -41,6 +41,17 @@ def misplaced(a: BoardState, b: BoardState): Double = {
     var diff2 = amap(num)._2 - bmap(num)._2
     h += (if (diff1 > 0) diff1 else -diff1)
     h += (if (diff2 > 0) diff2 else -diff2)
+  }
+  h
+}
+
+def misplaced(a: BoardState, b: BoardState): Double = {
+  val amap = a.board.tiles.map(_.swap)
+  val bmap = b.board.tiles.map(_.swap)
+  var h = 0
+  for (i <- amap) {
+    var num = i._1
+    if (amap(num) != bmap(num)) h = h+1
   }
   h
 }
