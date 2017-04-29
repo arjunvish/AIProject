@@ -115,13 +115,10 @@ def goalState(n: Int) = {
   BoardState(Board(n, m - lastPos), lastPos)
 }
 
-val ts = Map(
-    (1,1) -> 3, (1,2) -> 6, (1,3) -> 2,
-    (2,1) -> 4, (2,2) -> 7, 
-    (3,1) -> 1, (3,2) -> 5, (3,3) -> 8
-    )
+//((1, 2, 3), (4, 8, 5), (0, 7, 6))
 
+val ts = Map((1, 1) -> 2, (1, 2) -> 4, (1, 3) -> 3, (2, 1) -> 1, (2, 2) -> 5, (2, 3) -> 6, (3, 1) -> 7, (3, 2) -> 8)
 // sample board
 val b = Board(3, ts)
-val start = BoardState(b, (2,3))
+val start = BoardState(b, (3,3))
 
