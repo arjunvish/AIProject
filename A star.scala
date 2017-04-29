@@ -14,14 +14,14 @@ def Astar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: (P
     var state = stateTuple._3
     if (state == goal) {
       var path = List[P]()
-      path = goal :: path
+      //path = goal :: path
       while (state != startState) {
         val prevState: P = state.getPredecessor().asInstanceOf[P]
         path = state :: path
         state = prevState
       }  
       path = startState :: path
-      println("explored size s" + explored.size)
+      println("explored size " + explored.size)
       return path
     }
     for (op <- Operators) {
@@ -62,9 +62,8 @@ def misplaced(a: BoardState, b: BoardState): Double = {
   }
   h
 }
-
-var x = Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
-println(x.length)
-var y = Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
-println(y.length)
-println(x==y)
+    var x = Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
+    println(x.length-1)
+    var y = Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
+    println(y.length-1)
+    println(x==y)
