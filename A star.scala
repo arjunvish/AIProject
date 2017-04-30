@@ -62,6 +62,57 @@ def misplaced(a: BoardState, b: BoardState): Double = {
   }
   h
 }
+
+def maxSwap(a: BoardState, b: BoardState): Double = {
+  var current = a
+  var goal = b
+  //amap and bmap are tile-value to position mappings (reverse of tile maps)
+  var swapCount = 0 //keeps track of the number of swaps which is the heuristic count
+  while(current != goal)
+  {
+    println(current)
+    var current_reverse = current.board.tiles.map(_.swap)
+      var goal_reverse = goal.board.tiles.map(_.swap)
+    var current_empty_pos = current.emptyPos //where the empty tile should be
+    //var value_in_current = goal.board.tiles(current_empty_pos) //value in the position where the empty tile should be
+    if(goal.emptyPos != current.emptyPos)
+    {
+      //if there is a non-empty tile in the location where the empty tile should be, swap that tile with the empty tile
+      var goal_current_empty = goal.board.tiles(current_empty_pos)
+      //swap and update current
+      var new_board = current.board.swap(current_reverse(goal_current_empty), current_empty_pos)
+      var new_emptyPos = current_reverse(goal_current_empty)
+      current = BoardState(new_board, new_emptyPos)
+      swapCount += 1 //increment count
+    }
+    else
+    {
+      var flag : Boolean = false 
+      //if the empty-tile is in its actual position, swap it with the first tile in the board which isn't in its actual position and then repeat
+      for(i <- 1 to current.board.size){
+        for(j <- 1 to current.board.size){
+          var posn : Pos = (i, j) //all positions in the board
+          if((posn != current_empty_pos) && (!flag)){
+            //check all positions except current empty, stop if a position to swap with is found
+            var current_pos = current.board.tiles(posn)
+            var goal_pos = goal.board.tiles(posn)
+            if(current_pos != goal_pos){
+              //Swap and change table
+              flag = true
+              var new_board = current.board.swap(posn, current_empty_pos)
+              var new_emptyPos = current_pos
+              current = BoardState(new_board, posn)
+              swapCount += 1 //increment count
+            }
+          }
+        }
+      }
+    }
+  }
+  swapCount//return swapCount
+}
+
+
     var x = Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
     println(x.length-1)
     var y = Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
