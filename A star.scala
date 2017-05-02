@@ -117,4 +117,6 @@ def maxSwap(a: BoardState, b: BoardState): Double = {
     println(x.length-1)
     var y = Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
     println(y.length-1)
-    println(x==y)
+    var z = Astar(start, goalState(3), List(Left, Right, Up, Down), maxSwap: (BoardState, BoardState) => Double)
+    println(z.length-1)
+    println(x==y && x==z)

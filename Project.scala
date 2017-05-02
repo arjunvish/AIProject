@@ -199,7 +199,7 @@ object Project {
 	  var swapCount = 0 //keeps track of the number of swaps which is the heuristic count
 	  while(current != goal)
 	  {
-	    println(current)
+	    //println(current)
 	    var current_reverse = current.board.tiles.map(_.swap)
 	      var goal_reverse = goal.board.tiles.map(_.swap)
 	    var current_empty_pos = current.emptyPos //where the empty tile should be
@@ -241,14 +241,24 @@ object Project {
 	  swapCount//return swapCount
 	}
 	
+	def time[R](block: => R): R = {  
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    println("Elapsed time: " + (t1 - t0) + "ns")
+    result
+}
+	
 	def main(args: Array[String]) {
 		val ts = Map((1, 1) -> 2, (1, 2) -> 4, (1, 3) -> 3, (2, 1) -> 1, (2, 2) -> 5, (2, 3) -> 6, (3, 1) -> 7, (3, 2) -> 8) // sample board
 		val b = Board(3, ts)
 		val start = BoardState(b, (3,3))
-		var x = Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
+		var x = time{Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)}
 		println(x.length-1)
-		var y = Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
+		var y = time{Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)}
 		println(y.length-1)
+		var z = time{Astar(start, goalState(3), List(Left, Right, Up, Down), maxSwap: (BoardState, BoardState) => Double)}
+		println(z.length-1)
 		println(x==y)
 	}
 }
