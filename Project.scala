@@ -247,18 +247,14 @@ object Project {
     println("Elapsed time: " + (t1 - t0) + "ns")
     result
 }
-	
-var l : List[State] = Nil
 
-def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Int, threshold: Double): Option[Double] = {
+def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Int, threshold: Double, l: List[P]): (Option[Double], List[P]) = {
   var f = g + h(node, goal)
   if (f > threshold)
-  	return Some(f)
+  	return (Some(f), Nil)
   if (node == goal) {
-    l = node :: l
-    println(l)
-    println("test1")
-    return None
+  	var newlist: List[P] = node :: l
+    return (None, l)
     
   }
   var min : Double = Double.PositiveInfinity
@@ -267,42 +263,40 @@ def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) 
     if (output != None && output.get != node.predecessor) {
       val o: P = output.get.asInstanceOf[P]
       o.setPredecessor(node)
-    	var temp = Search(o, goal, Operators, h, g + 1, threshold)
-      if (temp == None) {
-        l = node :: l
-        println(l)
-        println("test2")
-        return None
+    	var temp = Search(o, goal, Operators, h, g + 1, threshold, l)
+      if (temp._1 == None) {
+        var newlist: List[P] = node :: temp._2
+        return (None, newlist)
       }
-      if (temp.get < min) {
-        min = temp.get
+      if (temp._1.get < min) {
+        min = temp._1.get
       }
     }
   }
-  return Some(min)
+  return (Some(min), Nil)
 }  
 
 
 def IDAstar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: (P, P)=> Double): List[State] = {
   var threshold = h(startState, goal)
-  
+  var l: List[P] = Nil
   while(true)
   {
-   	var temp = Search(startState, goal, Operators, h, 0, threshold)
+   	var temp = Search(startState, goal, Operators, h, 0, threshold, l)
     
-    if(temp == None)
+    if(temp._1 == None)
     {
-      println("test3")
-    	return l
+      	//println("test3")
+    	return temp._2
     }
-    if(temp.get == Double.PositiveInfinity)
+    if(temp._1.get == Double.PositiveInfinity)
     {
-      println("test4")
-    	return l
+      	//println("test4")
+    	return temp._2
     }
-    threshold = temp.get
+    threshold = temp._1.get
   }
-  l
+  return l
 }    
 	
 	
@@ -310,12 +304,27 @@ def IDAstar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: 
 	
 	def main(args: Array[String]) {
 	  
-	  val ts = Map((1, 1) -> 3, (1, 2) -> 6, (1, 3) -> 2, (2, 1) -> 4, (2, 2) -> 7, (3, 1) -> 1, (3, 2) -> 5, (3, 3) -> 8)
+	  	val ts = Map((1, 1) -> 3, (1, 2) -> 6, (1, 3) -> 2, (2, 1) -> 4, (2, 2) -> 7, (3, 1) -> 1, (3, 2) -> 5, (3, 3) -> 8)
 		val b = Board(3, ts)
 		val start = BoardState(b, (2,3))
-		val x = time{IDAstar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)}
-		println(x)
-		println(x.length-1)
+
+		//((5, 0, 1, 4), (9, 7, 3, 11), (6, 2, 14, 8), (13, 10, 15, 12))
+
+		val ts2 = Map (
+			(1, 1) -> 5 			, (1, 3) -> 1, (1, 4) -> 4,
+			(2, 1) -> 9, (2, 2) -> 7, (2, 3) -> 3, (2, 4) -> 11,
+			(3, 1) -> 6, (3, 2) -> 2, (3, 3) -> 14, (3, 4) -> 8,
+			(4, 1) -> 13, (4, 2) -> 10, (4, 3) -> 15, (4, 4) -> 12
+		)
+		val b2 = Board(4, ts2)
+		val start2 = BoardState(b2, (1, 2))
+		val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
+		//println(y)
+		for (i <- y) println(y)
+		println(y.length)
+		//val x = time{IDAstar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)}
+		//println(x)
+		//println(x.length-1)
 		
 	}
 }
