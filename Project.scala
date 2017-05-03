@@ -117,7 +117,7 @@ object Project {
 	def goalState(n: Int) = {
 	  var m: Map[Pos,Tile] = Map()
 	  for (i <- 1 to n; j <- 1 to n) {
-	    println((i,j))
+	    //println((i,j))
 	    m = m + ((i,j) -> (j + n * (i - 1)))
 	  }
 	  val lastPos = (n,n)
@@ -162,7 +162,6 @@ object Project {
 	  }
 	  return List[P]()
 	}
-	
 	
 	//manhattan() defines the Manhattan heuristic function
 	def manhattan(a: BoardState, b: BoardState): Double = {
@@ -249,16 +248,74 @@ object Project {
     result
 }
 	
+var l : List[State] = Nil
+
+def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Int, threshold: Double): Option[Double] = {
+  var f = g + h(node, goal)
+  if (f > threshold)
+  	return Some(f)
+  if (node == goal) {
+    l = node :: l
+    println(l)
+    println("test1")
+    return None
+    
+  }
+  var min : Double = Double.PositiveInfinity
+  for (op <- Operators) {
+    val output = op(node)
+    if (output != None && output.get != node.predecessor) {
+      val o: P = output.get.asInstanceOf[P]
+      o.setPredecessor(node)
+    	var temp = Search(o, goal, Operators, h, g + 1, threshold)
+      if (temp == None) {
+        l = node :: l
+        println(l)
+        println("test2")
+        return None
+      }
+      if (temp.get < min) {
+        min = temp.get
+      }
+    }
+  }
+  return Some(min)
+}  
+
+
+def IDAstar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: (P, P)=> Double): List[State] = {
+  var threshold = h(startState, goal)
+  
+  while(true)
+  {
+   	var temp = Search(startState, goal, Operators, h, 0, threshold)
+    
+    if(temp == None)
+    {
+      println("test3")
+    	return l
+    }
+    if(temp.get == Double.PositiveInfinity)
+    {
+      println("test4")
+    	return l
+    }
+    threshold = temp.get
+  }
+  l
+}    
+	
+	
+	
+	
 	def main(args: Array[String]) {
-		val ts = Map((1, 1) -> 2, (1, 2) -> 4, (1, 3) -> 3, (2, 1) -> 1, (2, 2) -> 5, (2, 3) -> 6, (3, 1) -> 7, (3, 2) -> 8) // sample board
+	  
+	  val ts = Map((1, 1) -> 3, (1, 2) -> 6, (1, 3) -> 2, (2, 1) -> 4, (2, 2) -> 7, (3, 1) -> 1, (3, 2) -> 5, (3, 3) -> 8)
 		val b = Board(3, ts)
-		val start = BoardState(b, (3,3))
-		var x = time{Astar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)}
+		val start = BoardState(b, (2,3))
+		val x = time{IDAstar(start, goalState(3), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)}
+		println(x)
 		println(x.length-1)
-		var y = time{Astar(start, goalState(3), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)}
-		println(y.length-1)
-		var z = time{Astar(start, goalState(3), List(Left, Right, Up, Down), maxSwap: (BoardState, BoardState) => Double)}
-		println(z.length-1)
-		println(x==y)
+		
 	}
 }
