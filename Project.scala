@@ -260,35 +260,39 @@ object Project {
 	}
 
 	//Recursive helper function for IDA* algorithm
-	def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Double, threshold: Double, l: List[P]): (Option[Double], List[P]) = {
+	def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Double, threshold: Double, l: List[P], explored: Int): (Option[Double], List[P], Int) = {
 		//The search function performs a depth-first search starting from the input node
 		//provided that the states being explored are within the threshold.
+		var e = explored
 		var f = g + h(node, goal)
 		if (f > threshold)
-			return (Some(f), Nil) //If the f value goes above the threshold, we return f.
+			return (Some(f), Nil, explored) //If the f value goes above the threshold, we return f.
 		if (node == goal) {
 			//If we find the goal, add it to a list (which will eventually contain the path from root to goal)
 			var newlist: List[P] = node :: l
-			return (None, newlist)
+			return (None, newlist, explored)
 		}
 		var min : Double = Double.PositiveInfinity
+
 		//We generate all successors of the current node, and perform depth-first search 
 		for (op <- Operators) {
 			val output = op(node)
 			if (output != None && output.get != node.predecessor) {
 				val o: P = output.get.asInstanceOf[P]
+				e = e + 1
 				o.setPredecessor(node)
-				var temp = Search(o, goal, Operators, h, g + node.cost(node, o), threshold, l)
+				var temp = Search(o, goal, Operators, h, g + node.cost(node, o), threshold, l, e)
+				e = temp._3
 				if (temp._1 == None) {
 					var newlist: List[P] = node :: temp._2
-					return (None, newlist)
+					return (None, newlist, temp._3)
 				}
 				if (temp._1.get < min) {
 					min = temp._1.get
 				}
 			}
 		}
-		return (Some(min), Nil)
+		return (Some(min), Nil, explored)
 	}  
 
 
@@ -296,9 +300,10 @@ object Project {
   		var threshold = h(startState, goal)
   		var l: List[P] = Nil
   		while(true){
-   			var temp = Search(startState, goal, Operators, h, 0, threshold, l)
+   			var temp = Search(startState, goal, Operators, h, 0, threshold, l, 0)
     		if(temp._1 == None) {
     			//If the search finds the goal state, we return the path from start to goal state.
+    			println("Explroed nodes = " + Integer.toString(temp._3))
     			return temp._2
     		}
     		if(temp._1.get == Double.PositiveInfinity) {
@@ -328,9 +333,10 @@ object Project {
 		)
 		val b2 = Board(4, ts2)
 		val start2 = BoardState(b2, (1, 2))
+		val b12 = BoardState(Board(4, Map( (1, 1) -> 1, (1, 2) -> 10, (1, 3) -> 8, (1, 4) -> 2, (2, 1) -> 5, (2, 2) -> 14, (2, 3) -> 4, (3, 1) -> 9, (3, 2) -> 6, (3, 3) -> 3, (3, 4) -> 12, (4, 1) -> 13, (4, 2) -> 11, (4, 3) -> 7, (4, 4) -> 15)), (2, 4))
 		//println(goalState(4))
-		val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
-		for (i <- y) println(i)
+		val y = IDAstar(b12, goalState(4), List(Left, Right, Up, Down), misplaced: (BoardState, BoardState) => Double)
+		//for (i <- y) println(i)
 		//println(y.length)
 		
 		/*-> Display a menu for the user with the following options: 
