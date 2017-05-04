@@ -10,7 +10,7 @@ Our implementation of the algorithms asumes a cost of 1, this is not generally t
 -> Part 1: Run A* with all 3 heuristics functions on all start states in list8 and record number of nodes expanded, cost of solution, running time on a specific machine, effective branching factor - possibly tabulate these. Calculate and print the average value of metric for each solution depth.
 -> Part 2: Run IDA* on list15 for one of the heuristics functions - not sure what we are supposed to report here, spec says "run a number of test cases on the 15-puzzle", "fine tune your implementation so that it is as fast possible on the Linux machines in our lab", and "report the most difficult problem in terms of solution depth that your implementation can solve in 20 minutes." - I suppose we want to tabulate all the solution depths and their respective times and find the solution that takes closest to 20 minutes to be solved, without crossing the 20 minute limit.
 -Fill this up in the report.
-
+- Delete unnecessary side-effect files of compilation from the repository, or put them in a separate folder to avoid clutter.
 Log:
 4/25 - 11:30 AM - Arjun - Github project created. Files added.
 
