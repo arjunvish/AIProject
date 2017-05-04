@@ -23,24 +23,24 @@ object Project {
 	  } 
 	  //toString overrides the default toString of the case class to print out a board in the required format
 	  override def toString = {
-	    var b = " +"
+	    var b = "+"
 	    for (i <- 1 to size) 
-	      b = b + "--"
-	    b = b + "-+\n"
+	      b = b + "---"
+	    b = b + "---+\n"
   
 	    var s = b
 	    for (i <- 1 to size) {
 	      s = s + " |" 
 	      for (j <- 1 to size)
 	        tiles get (i,j) match {
-	          case None    => s = s + "  "
-	          case Some(v) => s = s + " " + v
+	          case None    => s = s + "    "
+	          case Some(v) => s = s + "  " + String.format("%2s", Integer.toString(v))
         	}
 	      s = s + " |\n"  
 	    }
-	    s + b
+	    s + " " + b
 	  } 
-	}
+}
 
 
 	//A state represents a particular configuration of the board
@@ -52,12 +52,19 @@ object Project {
 	  	}
 
 	  	def getPredecessor () = predecessor
+
+	  	def cost[P <: State](s1: P, s2: P): Double
 	}
 
 	//A BoardState inherits the State class - it represents the 
 	//configuration of the board, and the empty position
 	case class BoardState (board: Board, emptyPos: Pos) extends State {
 	  	override def toString = board.toString + " " + emptyPos + "\n"
+	  	override def cost[P <: State] (s1: P, s2: P): Double = {
+	  		if (s1 == s2) return 0
+	  		if (manhattan(s1.asInstanceOf[BoardState], s2.asInstanceOf[BoardState]) == 1) return 1
+	  		else return Double.PositiveInfinity
+	  	}
 	}
 
 	//We have 4 operators - Left, Right, Up, and Down - 
@@ -126,8 +133,8 @@ object Project {
 	//It inputs the start state, the goal state, the list of operators, and a heuristic function. It returns a list of states.
 	def Astar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: (P, P)=> Double): List[P] = {
 		//We represent the frontier as a priority queue, ordered by the minimum f value.
-		val frontier = PriorityQueue.empty[(Double, Int, P)](
-		    Ordering.by((_: (Double, Int, P))._1).reverse
+		val frontier = PriorityQueue.empty[(Double, Double, P)](
+		    Ordering.by((_: (Double, Double, P))._1).reverse
 		)
 		//store the explored states in a set.
 		val explored = Set[P]()
@@ -159,7 +166,7 @@ object Project {
 		        if (output != None && !explored.contains(output.get.asInstanceOf[P])){
 		          	val o: P = output.get.asInstanceOf[P]
 		          	o.setPredecessor(state)
-		          	frontier += ((g+1+h(o, goal), g+1, o))
+		          	frontier += ((g+state.cost(state, goal)+h(o, goal), g+state.cost(state, goal), o))
 		          	explored += o
 		        } 
 		    }
@@ -253,7 +260,7 @@ object Project {
 	}
 
 	//Recursive helper function for IDA* algorithm
-	def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Int, threshold: Double, l: List[P]): (Option[Double], List[P]) = {
+	def Search [P <: State] (node: P, goal: P, Operators: List[Operator], h: (P, P) => Double, g: Double, threshold: Double, l: List[P]): (Option[Double], List[P]) = {
 		//The search function performs a depth-first search starting from the input node
 		//provided that the states being explored are within the threshold.
 		var f = g + h(node, goal)
@@ -262,7 +269,7 @@ object Project {
 		if (node == goal) {
 			//If we find the goal, add it to a list (which will eventually contain the path from root to goal)
 			var newlist: List[P] = node :: l
-			return (None, l)
+			return (None, newlist)
 		}
 		var min : Double = Double.PositiveInfinity
 		//We generate all successors of the current node, and perform depth-first search 
@@ -271,7 +278,7 @@ object Project {
 			if (output != None && output.get != node.predecessor) {
 				val o: P = output.get.asInstanceOf[P]
 				o.setPredecessor(node)
-				var temp = Search(o, goal, Operators, h, g + 1, threshold, l)
+				var temp = Search(o, goal, Operators, h, g + node.cost(node, o), threshold, l)
 				if (temp._1 == None) {
 					var newlist: List[P] = node :: temp._2
 					return (None, newlist)
@@ -312,7 +319,7 @@ object Project {
 	  	val ts = Map((1, 1) -> 3, (1, 2) -> 6, (1, 3) -> 2, (2, 1) -> 4, (2, 2) -> 7, (3, 1) -> 1, (3, 2) -> 5, (3, 3) -> 8)
 		val b = Board(3, ts)
 		val start = BoardState(b, (2,3))
-		println(start)
+		//println(start)
 		val ts2 = Map (
 			(1, 1) -> 5 			, (1, 3) -> 1, (1, 4) -> 4,
 			(2, 1) -> 9, (2, 2) -> 7, (2, 3) -> 3, (2, 4) -> 11,
@@ -321,8 +328,9 @@ object Project {
 		)
 		val b2 = Board(4, ts2)
 		val start2 = BoardState(b2, (1, 2))
-		//val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
-		//for (i <- y) println(y)
+		//println(goalState(4))
+		val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
+		for (i <- y) println(i)
 		//println(y.length)
 		
 		/*-> Display a menu for the user with the following options: 
