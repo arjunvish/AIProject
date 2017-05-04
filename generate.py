@@ -1,4 +1,6 @@
-N = 3
+from random import sample
+
+N = 4
 
 def up(state):
  for i in range(N):
@@ -76,11 +78,29 @@ def op(state, n):
  elif (n == 3):
   return right(state)
 
+def printstate(state):
+  r = 0
+  s = "BoardState(Board(" + str(N) +", Map( "
+  pos = ""
+  for row in state:
+    c = 0
+    for col in row:
+      if state[r][c] != 0:
+        s += "(" + str(r+1) + ", " + str(c+1) + ") -> " + str(state[r][c]) + ", "
+        c += 1
+      else:
+        pos = "(" + str(r+1) + ", "  + str(c+1) + ")"
+        c += 1
+    r += 1
+  s = s[:-2] + ")), " + pos + ")"
+  print s
+
+
 if __name__ == '__main__':
- state = ((1, 2, 3), (4, 5, 6), (7, 8, 0))
+ state = ((1, 2, 3, 4), (5, 6, 7, 8), (9, 10, 11, 12), (13, 14, 15, 0))
  states = [set([])]
  states[0].add(state)
- for i in range(1, 20):
+ for i in range(1, 21):
   states.append(set([]))
   for State in states[i-1]:
    for Op in range(4):
@@ -92,9 +112,16 @@ if __name__ == '__main__':
        t = False
      if t:
       states[i].add(a)
- for i in range(20):
+ for i in range(21):
   print "level " + str(i)
-  for state in states[i]:
-   print state
+  if len(states[i]) < 25:
+    for state in states[i]:
+      #print state
+      printstate(state)
+  else:
+    a = sample(states[i], 25)
+    for state in a:
+      #print state
+      printstate(state)
 
-  print "\n\n"
+  print "\n"
