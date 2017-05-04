@@ -14,6 +14,10 @@ Our implementation of the algorithms asumes a cost of 1, this is not generally t
 Log:
 4/25 - 11:30 AM - Arjun - Github project created. Files added.
 
+4/26 - 3:00 AM - All - Discussed the roles and responsibilities.
+
+4/28 - 11:00 AM - Tanmay - Wrote the classes State, BoardState, Operator. Implemented A*, and the manhattan, misplaced heuristics.
+
 4/29 - 4:00 PM - All - Created script for converting test cases to right format, wrote MaxSwap, tested A* with heuristics and fixed bugs.
 
 5/2 - 6:00 PM - All - Implemented IDA*.
