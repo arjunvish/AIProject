@@ -1,14 +1,19 @@
 To-Do:
-- Pick a coordinator, recorder, and a checker. I propose to be the recorder (Arjun).
-- Read the 3 papers and figure out 2 heuristics for the 8-puzzle problem.
-- Implement Manhattan distance heuristics, and 2 heuristics from the literature.
-- Create test cases.
-- Run A* search on test cases.
-- Fix goal configuration.
-- Fix time limit for test cases.
-- Find average value for each solution depth.
-- Read about IDA* and SMA*.
-- Choose a heuristic for 15-puzzle problem.
+- This is what the spec says: "We saw two heuristic functions for the 8-puzzle: Manhattan distance and misplaced tiles. Several heuristics in the literature purport to do better than either of these. See for example [Nil71, MP89, Kor00]. Test these claims by implementing the Manhattan distance heuristics and at least two more heuristics from the literature, and running your implementation of the A* search strategy on a number of test cases."
+It says use two more heuristics from the literature - looks like its saying not to use misplaced tiles.
+- The spec says: "In both Part 1 and Part 2, except for the data structures that implement a state, the heuristic function and the procedures that manipulate states, your implementation of the search procedure should be independent from the specific domain."
+Our implementation of the algorithms asumes a cost of 1, this is not generally true - we want to implement a cost function that always returns 1 and use this instead as an argument to our algorithms.
+- Within the main function:
+-> Display a menu for the user with the following options: 1. A* with Manhatten distance heuristics funciton on sample input 2. A* with misplaced tiles heuristics funciton on sample input 3. A* with max-swap heuristics funciton on sample input 3. IDA* with Manhatten distance heuristics funciton on sample input 4. IDA* with misplaced tiles heuristics funciton on sample input 5. IDA* with max-swap heuristics funciton on sample input 6. Statistics from part 1 of problem 7. Statistics from part 2 of problem. 
+-> Use the same start state and goal state for menu options 1-5 - display start and goal state and the respective paths for options 1-5.
+-> Input lists (list8, list15)of start configurations for 8 puzzle and 15 puzzle problems from new8.txt and new15.txt, respectively.
+-> Part 1: Run A* with all 3 heuristics functions on all start states in list8 and record number of nodes expanded, cost of solution, running time on a specific machine, effective branching factor - possibly tabulate these. Calculate and print the average value of metric for each solution depth.
+-> Part 2: Run IDA* on list15 for one of the heuristics functions - not sure what we are supposed to report here, spec says "run a number of test cases on the 15-puzzle", "fine tune your implementation so that it is as fast possible on the Linux machines in our lab", and "report the most difficult problem in terms of solution depth that your implementation can solve in 20 minutes." - I suppose we want to tabulate all the solution depths and their respective times and find the solution that takes closest to 20 minutes to be solved, without crossing the 20 minute limit.
+-Fill this up in the report.
 
 Log:
 4/25 - 11:30 AM - Arjun - Github project created. Files added.
+
+4/29 - 4:00 PM - All - Created script for converting test cases to right format, wrote MaxSwap, tested A* with heuristics and fixed bugs.
+
+5/2 - 6:00 PM - All - Implemented IDA*.
