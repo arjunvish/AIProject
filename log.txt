@@ -3,6 +3,7 @@ To-Do:
 It says use two more heuristics from the literature - looks like its saying not to use misplaced tiles.
 - The spec says: "In both Part 1 and Part 2, except for the data structures that implement a state, the heuristic function and the procedures that manipulate states, your implementation of the search procedure should be independent from the specific domain."
 Our implementation of the algorithms asumes a cost of 1, this is not generally true - we want to implement a cost function that always returns 1 and use this instead as an argument to our algorithms.
+- Modify the IDA* to output the number of explored states in the final iteration.
 - Within the main function:
 -> Display a menu for the user with the following options: 1. A* with Manhatten distance heuristics funciton on sample input 2. A* with misplaced tiles heuristics funciton on sample input 3. A* with max-swap heuristics funciton on sample input 3. IDA* with Manhatten distance heuristics funciton on sample input 4. IDA* with misplaced tiles heuristics funciton on sample input 5. IDA* with max-swap heuristics funciton on sample input 6. Statistics from part 1 of problem 7. Statistics from part 2 of problem. 
 -> Use the same start state and goal state for menu options 1-5 - display start and goal state and the respective paths for options 1-5.
