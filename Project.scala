@@ -21,22 +21,22 @@ object Project {
 	  } 
 	  //toString overrides the default toString of the case class to print out a board in the required format
 	  override def toString = {
-	    var b = " +"
+	    var b = "+"
 	    for (i <- 1 to size) 
-	      b = b + "--"
-	    b = b + "-+\n"
+	      b = b + "---"
+	    b = b + "---+\n"
   
 	    var s = b
 	    for (i <- 1 to size) {
 	      s = s + " |" 
 	      for (j <- 1 to size)
 	        tiles get (i,j) match {
-	          case None    => s = s + "  "
-	          case Some(v) => s = s + " " + v
+	          case None    => s = s + "    "
+	          case Some(v) => s = s + "  " + String.format("%2s", Integer.toString(v))
         	}
 	      s = s + " |\n"  
 	    }
-	    s + b
+	    s + " " + b
 	  } 
 	}
 
@@ -159,6 +159,7 @@ object Project {
 		        val output = op(state)
 		        if (output != None && !explored.contains(output.get.asInstanceOf[P])){
 		          val o: P = output.get.asInstanceOf[P]
+		          //We set the predecessor of the node to be 
 		          o.setPredecessor(state)
 		          frontier += ((g+1+h(o, goal), g+1, o))
 		          explored += o
@@ -317,7 +318,7 @@ def IDAstar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: 
 	  	val ts = Map((1, 1) -> 3, (1, 2) -> 6, (1, 3) -> 2, (2, 1) -> 4, (2, 2) -> 7, (3, 1) -> 1, (3, 2) -> 5, (3, 3) -> 8)
 		val b = Board(3, ts)
 		val start = BoardState(b, (2,3))
-
+		println(start)
 		val ts2 = Map (
 			(1, 1) -> 5 			, (1, 3) -> 1, (1, 4) -> 4,
 			(2, 1) -> 9, (2, 2) -> 7, (2, 3) -> 3, (2, 4) -> 11,
@@ -326,8 +327,8 @@ def IDAstar [P <: State] (startState: P, goal: P, Operators: List[Operator], h: 
 		)
 		val b2 = Board(4, ts2)
 		val start2 = BoardState(b2, (1, 2))
-		val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
-		for (i <- y) println(y)
-		println(y.length)
+		//val y = IDAstar(start2, goalState(4), List(Left, Right, Up, Down), manhattan: (BoardState, BoardState) => Double)
+		//for (i <- y) println(y)
+		//println(y.length)
 	}
 }
