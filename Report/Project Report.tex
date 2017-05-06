@@ -5,7 +5,7 @@
 		\Large \textbf{Artificial Intelligence Course Project: The 8- and The 15- Puzzle}
 	\end{center}
 	\begin{center}
-		\textit{Sydney Garcia, Tanmay Inamdar, Arjun Viswanathan}
+		\textit{Sydney Garcia (checker), Tanmay Inamdar, Arjun Viswanathan}
 	\end{center}
 
 	\section{Hypothesis}
@@ -15,7 +15,11 @@
 		
 	\section{Report}
 		
-		The Manhattan distance heuristic for the n-puzzle problem calculates, given a state, the sum of the Manhattan distances of each tile from its respective position in the final state. The max-swap heuristic function calculates the number of tile swaps with the blank space required to go from start state. The misplaced tile heuristic function counts the number of tiles that are out of place compared to the goal state, not including the blank tile. The Manhattan distance and misplaced tile heuristics are both stated as being admissible heuristics in our class text. All three of the heuristics we used were also cited to be admissible in the reference text [MP89]. \par
+		The Manhattan distance heuristic for the n-puzzle problem calculates, given a state, the sum of the Manhattan distances of each tile from its respective position in the final state. The max-swap heuristic function calculates the number of tile swaps with the blank space required to go from start state. The misplaced tile heuristic function counts the number of tiles that are out of place compared to the goal state, not including the blank tile. The Manhattan distance and misplaced tile heuristics are both stated as being admissible heuristics in our class text. All three of the heuristics used were also cited to be admissible in the reference text [MP89]. \par
+		
+		For each n = 1 to 20, where an 8-puzzle is solvable in exactly n moves to our goal state, we ran up to 25 starting states and recorded the time of completion, the number of nodes expanded, the cost of the solution, and the branching factor. The results of each solution depth for each of the three chosen heuristics are shown in Tables 1, 2, 3, and 4. \par
+		
+		
 
         \begin{table}[]
         \centering
