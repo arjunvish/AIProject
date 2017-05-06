@@ -5,7 +5,7 @@
 		\Large \textbf{Artificial Intelligence Course Project: The 8- and The 15- Puzzle}
 	\end{center}
 	\begin{center}
-		\textit{Sydney Garcia (checker), Tanmay Inamdar, Arjun Viswanathan}
+		\textit{Sydney Garcia, Tanmay Inamdar, Arjun Viswanathan}
 	\end{center}
 
 	\section{Hypothesis}
@@ -19,9 +19,15 @@
 		
 		For each n = 1 to 20, where an 8-puzzle is solvable in exactly n moves to our goal state, we ran up to 25 starting states and recorded the time of completion, the number of nodes expanded, the cost of the solution, and the branching factor. The results of each solution depth for each of the three chosen heuristics are shown in Tables 1, 2, 3, and 4. \par
 		
-		
+		The results for the number of nodes expanded for each n when using A* with each of the 3 heuristics are in Table 1. When examining the number of nodes expanded, the three heuristics behaved similarly until about n = 4. The Manhattan distance heuristic performed the same or better than the other two heuristics (max-swap and misplaced tiles) in every single instance of n that was tested. As n grew larger, the amount of expanded nodes differed more and more. At n = 20, max-swap expanded over 6 times more nodes than Manhattan distance with about 3,900 nodes, and misplaced tiles expanded over 8 times more than Manhattan distance, with about 5,040 noes. The Manhattan distance heuristic was able to solve the n = 20 8-puzzle with expanding about 615 nodes. In a system where using less memory is ideal, Manhattan distance performs best. \par
+			
+	   The results for the average time elapsed for each n when using A* with each of the 3 heuristics are shown in Table 2. The misplaced tiles heuristic performed the fastest for n = 1 to n = 7. Manhattan performed the fastest from n = 8 to n = 20. At n = 20, misplaced tiles performed over 6 times slower than Manhattan distance at 37.42 ms, and max-swap performed over 17 times slower than Manhattan distance at 98.22 ms. The Manhattan distance heuristic was able to solve the n = 20 8-puzzle in 5.59 ms, and performed the best. \par
+	   
+	   The cost for each of our solutions was equivalent to the depth. Since A* is guaranteed to find the least-cost solution with an admissible heuristic, the cost was equal to the depth for every n and every heuristic, which is shown in Table 3. \par
+	   
+	   SECTION ABOUT BRANCH FACTOR \par
 
-        \begin{table}[]
+        \begin{table}[ht]
         \centering
         \caption{Number of Expanded Nodes for Solving 8-Puzzle}
         \label{expanded-nodes-8-puzzle}
@@ -50,7 +56,7 @@
         \end{tabular}
         \end{table}
         
-        \begin{table}[]
+        \begin{table}[ht]
         \centering
         \caption{Average Time for Solving 8-Puzzle (ms)}
         \label{avg-time-8-puzzle}
@@ -79,7 +85,7 @@
         \end{tabular}
         \end{table}
         
-        \begin{table}[]
+        \begin{table}[ht]
         \centering
         \caption{Cost of the Solution for Solving 8-Puzzle}
         \label{solution-cost-8-puzzle}
